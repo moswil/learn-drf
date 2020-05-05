@@ -41,6 +41,8 @@ INSTALLED_APPS = [
 
     # third party apps
     'rest_framework',
+    'rest_framework.authtoken',
+    'django_extensions',
 
     # our apps
     'profile_api.apps.ProfileApiConfig',

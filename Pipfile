@@ -13,6 +13,7 @@ pep8-naming = "*"
 [packages]
 django = "*"
 djangorestframework = "*"
+django-extensions = "*"
 
 [requires]
 python_version = "3.7"
