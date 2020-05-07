@@ -16,19 +16,21 @@
 
 ### API URLs
 
-#### URLs for our API
+#### URLs for the profile
 
 - `/api/v1/profile` - list all profiles
-  - GET (list profiles)
-  - POST (create profile)
+  - `GET` - (list profiles)
+  - `POST` - (create profile)
 - `/api/v1/profile/<int:profile_id>` - manage specific profile
-  - GET (view specific profile)
-  - PUT/PATCH (update profile)
-  - DELETE (remove profile)
+  - `GET` - (view specific profile)
+  - `PUT/PATCH` - (update profile)
+  - `DELETE` - (remove profile)
 
 ## Feed API
+
 ### Basic Requirements
-- Creating  new feed items
+
+- Creating new feed items
   - For logged in users only
 - Updating feed items
   - For logged in users only
@@ -37,3 +39,13 @@
 - Viewing other profile status updates
 
 ### API URLs
+
+#### URLs for the feed item
+
+- `/api/v1/feed/` - list all feed items
+  - `GET` - list feed items
+  - `POST` - create feed item for logged in users
+- `/api/v1/feed/<int:feed_item_id>` - manage specific feed items
+  - `GET` - get a specific feed item
+  - `PUT/PATCH` - update a specific feed item
+  - `DELETE` - delete a feed item

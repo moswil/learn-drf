@@ -1,7 +1,7 @@
 """Serializers for the profile_api app."""
 from rest_framework.serializers import ModelSerializer
 
-from profile_api.models import UserProfile
+from profile_api.models import UserProfile, ProfileFeedItems
 
 
 class UserProfileSerializer(ModelSerializer):
@@ -28,3 +28,16 @@ class UserProfileSerializer(ModelSerializer):
         user.save()
 
         return user
+
+
+class ProfileFeedItemsSerialzer(ModelSerializer):
+    """Serializes profile feed items."""
+
+    class Meta:
+        model = ProfileFeedItems
+        fields = '__all__'
+        extra_kwargs = {
+            'user_profile': {
+                'read_only': True
+            }
+        }

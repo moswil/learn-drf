@@ -7,10 +7,11 @@ from rest_framework.filters import SearchFilter
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from profile_api.serializers import UserProfileSerializer
-from profile_api.models import UserProfile
-from profile_api.permissions import UpdateOwnPermission
+from profile_api.serializers import UserProfileSerializer, ProfileFeedItemsSerialzer
+from profile_api.models import UserProfile, ProfileFeedItems
+from profile_api.permissions import UpdateOwnPermission, PostOwnStatus
 
 
 class UserProfileViewSet(ModelViewSet):
@@ -24,25 +25,7 @@ class UserProfileViewSet(ModelViewSet):
     filter_backends = (SearchFilter,)
     search_fields = ('name', 'email',)
 
-    # def list(self, request, *args, **kwargs):
-    #     """Override the DRF list, to get non-deleted users."""
-    #     pk = self.request.query_params.get('pk')
-    #     if pk is None:
-    #         users = self.queryset.filter(
-    #             is_deleted__exact=False)
-    #     else:
-    #         users = self.queryset.get(id__exact=pk)
-
-    #     page = self.paginate_queryset(users)
-    #     if page is not None:
-    #         serializer = self.get_serializer(
-    #             page, many=True)
-    #         return self.get_paginated_response(serializer.data)
-
-    #     serializer = self.get_serializer(users, many=True)
-    #     return Response(serializer.data)
-
-    @action(detail=False)
+    @action(detail=False, permission_classes=[IsAdminUser])
     def archived(self, request, *args, **kwargs):
         """Return the deleted/archived users."""
         users = UserProfile.objects.all().filter(
@@ -73,3 +56,17 @@ class LoginViewSet(ViewSet):
     def create(self, request):
         """Use the ObtainAuthTokenAPI APIView to validate and create a token."""
         return ObtainAuthToken().post(request=request)
+
+
+class UserProfileFeedViewset(ModelViewSet):
+    """Handles CRUD of profile feed items."""
+
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = ProfileFeedItemsSerialzer
+    queryset = ProfileFeedItems.objects.all()
+    permission_classes = (
+        PostOwnStatus, IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        """Set the user profile to the logged in user."""
+        serializer.save(user_profile=self.request.user)
